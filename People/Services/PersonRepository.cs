@@ -1,6 +1,6 @@
 ﻿using People.Models;
 using SQLite;
-namespace People;
+namespace People.Services;
 
 public class PersonRepository
 {
@@ -21,11 +21,11 @@ public class PersonRepository
 
     public PersonRepository(string dbPath)
     {
-        _dbPath = dbPath;                        
+        _dbPath = dbPath;
     }
 
     public void AddNewPerson(string name)
-    {            
+    {
         int result = 0;
         try
         {
@@ -45,6 +45,11 @@ public class PersonRepository
             StatusMessage = string.Format("Failed to add {0}. Error: {1}", name, ex.Message);
         }
 
+    }
+    public void DeletePerson (int Id)
+    {
+        Init();
+        conn.Delete<Person>(Id);
     }
 
     public List<Person> GetAllPeople()

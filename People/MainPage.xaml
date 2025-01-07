@@ -23,6 +23,16 @@
             Grid.Row="3"
             Clicked="OnGetButtonClicked" />
 
+        <Entry x:Name="Delete People"
+               Placeholder="Enter Id" />
+
+        <Button Text="Delete People"
+                Grid.Row="5"
+                Clicked="OnGetButtonClicked" />
+
+
+
+
         <CollectionView x:Name="peopleList" Grid.Row="4">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:Person">
