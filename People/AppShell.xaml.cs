@@ -1,4 +1,4 @@
-﻿namespace People;
+﻿namespace VanessaTorresPeople;
 
 public partial class AppShell : Shell
 {

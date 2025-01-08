@@ -1,6 +1,7 @@
 ﻿using VanessaTorresPeople.Models;
 using SQLite;
-namespace VanessaTorresPeople.Services;
+
+namespace VanessaTorresPeople;
 
 public class PersonRepository
 {
