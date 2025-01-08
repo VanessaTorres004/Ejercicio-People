@@ -1,46 +1,115 @@
-﻿using People.Services;
-using People.Models;
+﻿
+using VanessaTorresPeople.Models;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
+using VanessaTorresPeople.ViewModels;
 
-namespace People.ViewModels
+namespace VanessaTorresPeople.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainPageViewModel : BaseViewModel
     {
-        public ObservableCollection<Person> People { get; set; } = new ObservableCollection<Person>();
+        
+        public ObservableCollection<Person> People { get; set; }
 
-        public ICommand DeleteCommand { get; set; }
+        
+        public ICommand AddPersonCommand { get; }
 
-        public MainViewModel()
+        
+        public ICommand DeletePersonCommand { get; }
+
+        
+        public ICommand RefreshPeopleCommand { get; }
+
+        
+        private string _statusMessage;
+        public string StatusMessage
         {
-            LoadPeople();
-            DeleteCommand = new Command<Person>(DeletePerson);
+            get => _statusMessage;
+            set => SetProperty(ref _statusMessage, value);
         }
 
-        private void LoadPeople()
+        
+        public MainPageViewModel()
         {
-            var people = App.Database.GetPeopleAsync().Result;
-            foreach (var person in people)
+            People = new ObservableCollection<Person>();
+
+            
+            AddPersonCommand = new Command<string>(AddPerson);
+            DeletePersonCommand = new Command<Person>(DeletePerson);
+            RefreshPeopleCommand = new Command(RefreshPeople);
+
+            
+            RefreshPeople();
+        }
+
+        
+        private void AddPerson(string name)
+        {
+            try
             {
-                People.Add(person);
+                if (string.IsNullOrEmpty(name))
+                    throw new Exception("Nombre válido requeridos");
+
+                
+                App.PersonRepo.AddNewPerson(name);
+
+                
+                People.Clear();
+                People.Add(new Person { Name = name });
+
+                
+                StatusMessage = $"{name} fue añadido exitosamente.";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error al añadir una persona: {ex.Message}";
             }
         }
 
+
+        
         private void DeletePerson(Person person)
         {
-            if (person != null)
+            try
             {
-                App.Database.DeletePersonAsync(person);
-                People.Remove(person);
-                Application.Current.MainPage.DisplayAlert(
-                    "Registro Eliminado",
-                    $"{person.FirstName} {person.LastName} acaba de eliminar un registro.",
-                    "OK");
+                
+                App.PersonRepo.DeletePerson(person.Id);
+
+                
+                StatusMessage = $"Vanessa Torres acaba de eliminar un registro: {person.Name}.";
+
+                
+                RefreshPeople();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error al eliminar persona: {ex.Message}";
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-    }
-}
+        
+        private void RefreshPeople()
+        {
+            try
+            {
+                var peopleList = App.PersonRepo.GetAllPeople();
+                People.Clear();
 
+                
+                foreach (var person in peopleList)
+                {
+                    People.Add(person);
+                }
+
+                StatusMessage = $"Recuperado {peopleList.Count} persona/s.";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Failed to retrieve people: {ex.Message}";
+            }
+        }
+
+    }
+
+}

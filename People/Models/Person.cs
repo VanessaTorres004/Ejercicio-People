@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace People.Models;
+namespace VanessaTorresPeople.Models;
 
 [Table("people")]
 public class Person

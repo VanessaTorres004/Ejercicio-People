@@ -1,4 +1,4 @@
-﻿namespace People;
+﻿namespace VanessaTorresPeople;
 
 public class FileAccessHelper
 {
