@@ -1,6 +1,4 @@
-﻿
-
-namespace VanessaTorresPeople;
+﻿namespace VanessaTorresPeople;
 
 public partial class App : Application
 {
@@ -8,7 +6,7 @@ public partial class App : Application
 
     public App(PersonRepository repo)
     {
-        InitializeComponent(); 
+        InitializeComponent();
         PersonRepo = repo;
     }
 
